@@ -1,0 +1,112 @@
+/*
+Given the IntNode class, define the FindMax() function to return the largest value in the list or -99 if the list is empty. Assume all values in the list are non-negative.
+
+Ex: If the list contains:
+
+head -> 14 -> 191 -> 186 -> 181
+FindMax(headNode) returns 191.
+
+Ex: If the list contains:
+
+head ->
+FindMax(headNode) returns -99.
+*/
+
+
+
+#include <iostream>
+using namespace std;
+
+class IntNode {
+public:
+   // Constructor
+   IntNode(int dataInit);
+
+   // Get node value
+   int GetNodeData();
+
+   // Get pointer to next node
+   IntNode* GetNext();
+
+   /* Insert node after this node.
+      Before: this -- next
+      After:  this -- node -- next
+   */
+   void InsertAfter(IntNode* newNode);
+
+private:
+   int dataVal;
+   IntNode* nextNodePtr;
+};
+
+// Constructor
+IntNode::IntNode(int dataInit) {
+   this->dataVal = dataInit;
+   nextNodePtr = nullptr;
+}
+
+// Get node value
+int IntNode::GetNodeData() {
+   return this->dataVal;
+}
+
+// Get pointer to next node
+IntNode* IntNode::GetNext() {
+   return this->nextNodePtr;
+}
+
+/* Insert node after this node.
+   Before: this -- next
+   After:  this -- node -- next
+*/
+void IntNode::InsertAfter(IntNode* newNode) {
+   IntNode* tempNext = this->nextNodePtr;
+   this->nextNodePtr = newNode;
+   newNode->nextNodePtr = tempNext;
+}
+
+// Return largest value in the list
+int FindMax(IntNode *headNode)
+{
+  if (headNode == nullptr) {
+    return -99;
+  }
+
+  IntNode *p = headNode;
+
+  int max = p->GetNodeData();
+
+  p = p->GetNext();
+
+   while (p != nullptr) {
+      int currentNodeValue = p->GetNodeData();
+      if (currentNodeValue > max) {
+         max = currentNodeValue;
+      }
+      p = p->GetNext();
+   }
+
+  return max;
+}
+
+int main() {
+   IntNode* headNode = new IntNode(-1);
+   IntNode* currNode;
+   IntNode* lastNode;
+   int max;
+
+   // Initiaize head node
+   lastNode = headNode;
+
+   // Add nodes to the list
+   for (int i = 0; i < 20; ++i) {
+      currNode = new IntNode(i);
+      lastNode->InsertAfter(currNode);
+      lastNode = currNode;
+   }
+
+   max = FindMax(headNode);
+   cout << "Max is " << max;
+
+   return 0;
+}
