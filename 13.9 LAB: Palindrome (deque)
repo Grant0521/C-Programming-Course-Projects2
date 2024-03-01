@@ -1,0 +1,98 @@
+/*
+A palindrome is a string that reads the same backwards and forwards. Use a deque to implement a program that tests whether a line of text is a palindrome. The program reads a line, then outputs whether the input is a palindrome or not.
+
+Ex: If the input is:
+
+senile felines!
+the output is:
+
+Yes, "senile felines!" is a palindrome.
+Ex: If the input is:
+
+rotostor
+the output is:
+
+No, "rotostor" is not a palindrome.
+Ignore punctuation and spacing. Assume all alphabetic characters will be lowercase.
+
+Special case: A one-character string is a palindrome.
+*/
+
+
+
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <queue>
+#include <sstream>
+using namespace std;
+
+// Define a node structure for binary search tree
+struct TreeNode {
+    int val;
+    TreeNode* left;
+    TreeNode* right;
+    TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+};
+
+// Define a helper function to recursively build the tree
+TreeNode* buildBST(vector<int>& nums, int left, int right) {
+    if (left > right) {
+        return NULL;
+    }
+    int mid = (left + right) / 2;
+    TreeNode* root = new TreeNode(nums[mid]);
+    root->left = buildBST(nums, left, mid - 1);
+    root->right = buildBST(nums, mid + 1, right);
+    return root;
+}
+
+// Define main function to convert a list of numbers into a balanced BST
+TreeNode* randomListToBST(vector<int>& nums) {
+    int n = nums.size();
+    sort(nums.begin(), nums.end());
+    return buildBST(nums, 0, n - 1);
+}
+
+// Define a function to print the tree level-by-level
+void printTree(TreeNode* root) {
+    queue<TreeNode*> q;
+    q.push(root);
+    while (!q.empty()) {
+        int n = q.size();
+        for (int i = 0; i < n; i++) {
+            TreeNode* node = q.front();
+            q.pop();
+            if (node) {
+                cout << node->val << " ";
+                q.push(node->left);
+                q.push(node->right);
+            } else {
+                cout << "null ";
+            }
+        }
+        cout << endl;
+    }
+}
+
+// Define main function to test the program
+int main() {
+   string inputNum;
+   int number;
+   vector<int> nums;
+   
+   cout << "Insert a list of numbers separated by spaces (ex. 20 15 10 5 8 2):" << endl;
+   getline(cin, inputNum);
+   cout << endl;
+   
+   istringstream iss(inputNum);
+   
+   while (iss >> number) {
+      nums.push_back(number);
+   }
+   
+   TreeNode* root = randomListToBST(nums);
+   printTree(root);
+   return 0;
+}
+
