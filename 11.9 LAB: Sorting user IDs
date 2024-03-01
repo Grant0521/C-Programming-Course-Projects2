@@ -1,0 +1,99 @@
+/*
+Given a main() that reads user IDs (until -1), complete the Quicksort() and Partition() functions to sort the IDs in ascending order using the Quicksort algorithm, and output the sorted IDs one per line.
+
+Ex. If the input is:
+
+kaylasimms
+julia
+myron1994
+kaylajones
+-1
+the output is:
+
+julia
+kaylajones
+kaylasimms
+myron1994
+*/
+
+
+
+#include <string>
+#include <vector>
+#include <iostream>
+
+using namespace std;
+
+// TODO: Write the partitioning algorithm - pick the middle element as the
+//       pivot, compare the values using two index variables l and h (low and high),
+//       initialized to the left and right sides of the current elements being sorted,
+//       and determine if a swap is necessary
+int Partition(vector<string> &userIDs, int i, int k) {
+   int midpoint;
+   string temp;
+   string pivot;
+   bool done;
+   
+   midpoint = i + (k - i) / 2;
+   pivot = userIDs[midpoint];
+   
+   done = false;
+   while (!done) {
+      while (userIDs[i] < pivot) {
+         i += 1;
+      }
+      
+      while (pivot < userIDs[k]) {
+         k -= 1;
+      }
+      
+      if (i >= k) {
+         done = true;
+      }
+      else {
+         temp = userIDs[i];
+         userIDs[i] = userIDs[k];
+         userIDs[k] = temp;
+         
+         i += 1;
+         k -= 1;
+      }
+   }
+   
+   return k;
+}
+
+// TODO: Write the quicksort algorithm that recursively sorts the low and
+//       high partitions
+void Quicksort(vector<string> &userIDs, int i, int k) {
+   int lowEndIndex;
+   
+   if (i >= k) {
+      return;
+   }
+   
+   lowEndIndex = Partition(userIDs, i, k);
+   
+   Quicksort(userIDs, i, lowEndIndex);
+   Quicksort(userIDs, lowEndIndex + 1, k);
+}
+
+int main() {
+   vector<string> userIDList;
+   string userID;
+
+   cin >> userID;
+   while (userID != "-1") {
+      userIDList.push_back(userID);
+      cin >> userID;
+   }
+
+   // Initial call to quicksort
+   Quicksort(userIDList, 0, userIDList.size() - 1);
+
+   for (size_t i = 0; i < userIDList.size(); ++i) {
+      cout << userIDList.at(i) << endl;;
+   }
+
+   return 0;
+}
