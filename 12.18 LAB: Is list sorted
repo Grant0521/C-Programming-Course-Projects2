@@ -1,0 +1,119 @@
+/*
+Given the IntNode class, define the IsSorted() function that takes the head node of a linked list as a parameter and determines if the numbers in the list are in ascending order. IsSorted() returns true if the list is in ascending order, has only one item, or is empty; otherwise, isSorted() returns false.
+
+Ex: If the list contains:
+
+head -> 14 -> 19 -> 22 -> 99
+IsSorted(headNode) returns true.
+
+Ex: If the list contains:
+
+head -> 14 -> 19 -> 22 -> 99 -> 14 -> 100
+IsSorted(headNode) returns false.
+
+Ex: If the list contains:
+
+head ->
+IsSorted(headNode) returns true.
+*/
+
+
+
+#include <iostream>
+using namespace std;
+
+class IntNode {
+public:
+   // Constructor
+   IntNode(int dataInit);
+
+   // Get node value
+   int GetNodeData();
+
+   // Get pointer to next node
+   IntNode* GetNext();
+
+   /* Insert node after this node.
+      Before: this -- next
+      After:  this -- node -- next
+   */
+   void InsertAfter(IntNode* newNode);
+
+private:
+   int dataVal;
+   IntNode* nextNodePtr;
+};
+
+// Constructor
+IntNode::IntNode(int dataInit) {
+   this->dataVal = dataInit;
+   nextNodePtr = nullptr;
+}
+
+// Get node value
+int IntNode::GetNodeData() {
+   return this->dataVal;
+}
+
+// Get pointer to next node
+IntNode* IntNode::GetNext() {
+   return this->nextNodePtr;
+}
+
+/* Insert node after this node.
+   Before: this -- next
+   After:  this -- node -- next
+*/
+void IntNode::InsertAfter(IntNode* newNode) {
+   IntNode* tempNext = this->nextNodePtr;
+   this->nextNodePtr = newNode;
+   newNode->nextNodePtr = tempNext;
+}
+
+// Return true if list items are in asending order
+bool IsSorted(IntNode* headNode) {
+   int lastNodeValue, currentNodeValue;
+
+   IntNode *p = headNode;
+   p = p->GetNext();
+   lastNodeValue = p->GetNodeData();
+   
+   if (headNode == nullptr) {
+      return true;
+   }
+   
+   while (p != nullptr) {
+      currentNodeValue = p->GetNodeData();
+      if (currentNodeValue < lastNodeValue) {
+         return false;
+      }
+      lastNodeValue = p->GetNodeData();
+      p = p->GetNext();
+   }
+   return true;
+}
+
+int main() {
+   IntNode* headNode = new IntNode(-1);
+   IntNode* currNode;
+   IntNode* lastNode;
+
+   // Initiaize head node
+   lastNode = headNode;
+
+   // Add nodes to the list
+   for (int i = 0; i < 20; ++i) {
+      currNode = new IntNode(i);
+      lastNode->InsertAfter(currNode);
+      lastNode = currNode;
+   }
+
+   if (IsSorted(headNode)) {
+      cout << "true" << endl;
+   }
+   else {
+      cout << "false" << endl;
+   }
+
+   return 0;
+}
